@@ -5,7 +5,7 @@
 
 ## Présentation du projet
 
-Vous allez développer une application React permettant de découvrir les pays du monde à partir d'une API publique : **REST Countries**.
+VVous allez développer une application React permettant de découvrir les pays du monde à partir d'une API publique et gratuite, sans clé d'authentification : countries.dev.
 
 L'application devra récupérer les données des pays, les présenter sous forme de cartes et permettre à l'utilisateur de rechercher un pays par son nom.
 
@@ -70,10 +70,10 @@ Récupérer les données de REST Countries et les afficher dans la console du na
 ### API à utiliser
 
 ```text
-https://restcountries.com/v3.1/all?fields=name,capital,flags,population,region,cca3
+https://countries.dev/countries
 ```
 
-Cette URL demande uniquement les informations utiles pour notre application.
+Cette URL renvoie un tableau JSON contenant les informations des pays et territoires du monde. Aucune clé API n'est nécessaire.
 
 ### Consignes
 
@@ -91,12 +91,15 @@ Cette URL demande uniquement les informations utiles pour notre application.
 
 Dans la console, repérez les propriétés :
 
-- `name.common` : nom courant du pays.
-- `capital` : tableau contenant la ou les capitales.
-- `flags.png` : adresse d'une image du drapeau.
+Dans la console, repérez les propriétés :
+
+- `name` : nom du pays (chaîne de caractères).
+- `capital` : capitale du pays (chaîne de caractères).
+- `flags.png` : URL de l'image du drapeau.
+- `flag` : emoji du drapeau.
 - `population` : nombre d'habitants.
 - `region` : région géographique.
-- `cca3` : code pays à trois lettres.
+- `alpha3Code` : code pays à trois lettres.
 
 ### Critère de réussite
 
@@ -122,7 +125,7 @@ Afficher les noms des pays directement dans la page.
 4. Réutilisez votre fonction de récupération.
 5. Stockez le tableau obtenu dans le state avec `setPays`.
 6. Affichez les noms des pays à l'aide de `.map()`.
-7. Utilisez `cca3` comme `key` pour chaque élément de la liste.
+7. Utilisez alpha3Code comme key pour chaque élément de la liste.
 8. Supprimez le mécanisme temporaire de déclenchement utilisé à l'exercice 1.
 
 ### Critère de réussite
@@ -159,18 +162,30 @@ Remplacer la liste de noms par des cartes présentant les informations des pays.
    - Population.
    - Région.
 5. Dans `App.jsx`, affichez un composant `CountryCard` pour chaque pays.
-6. Ajoutez une `key` stable fondée sur `cca3`.
+6. Ajoutez une key stable fondée sur alpha3Code.
 7. Utilisez les classes CSS déjà présentes pour obtenir une grille responsive.
 
 ### Points d'attention
 
-La propriété `capital` est un tableau et peut être absente ou vide.
+La propriété `capital` est une chaîne de caractères.
+Elle peut être absente ou vide.
 
-Prévoyez un affichage de remplacement, par exemple **« Non renseignée »**.
+Prévoyez un affichage de remplacement, par exemple
+**« Non renseignée »**.
 
-Pour la population, utilisez `toLocaleString("fr-FR")` afin de rendre les grands nombres plus lisibles.
+Pour la population, utilisez `toLocaleString("fr-FR")`
+afin de rendre les grands nombres plus lisibles.
 
-Ajoutez un texte alternatif pertinent aux images des drapeaux.
+Pour les drapeaux, l'API fournit deux possibilités :
+
+- `flags.png` : URL de l'image du drapeau.
+- `flag` : emoji représentant le drapeau.
+
+Prévoyez un texte alternatif pertinent pour les images.
+
+**Attention :** une URL d'image peut être inaccessible.
+Dans ce cas, vous pouvez utiliser l'emoji `flag`
+comme solution de secours.
 
 ### Critère de réussite
 
@@ -237,6 +252,7 @@ Permettre à l'utilisateur de rechercher un pays par son nom.
 - Ne modifiez pas directement ce tableau.
 - Le filtrage doit se faire sur les données déjà chargées.
 - **N'envoyez pas une nouvelle requête API à chaque frappe.**
+Le filtrage s'effectue sur la propriété name, qui contient directement le nom du pays. Utilisez toLowerCase() pour rendre la recherche insensible aux majuscules et minuscules
 
 ### Critère de réussite
 
@@ -282,7 +298,8 @@ Choisissez une ou plusieurs améliorations :
 - Afficher le nombre de résultats.
 - Ajouter un bouton pour réinitialiser les filtres.
 - Améliorer l'accessibilité du formulaire et des cartes.
-
+- Conserver une largeur cohérente pour les cartes lorsqu'un seul pays correspond à la recherche.
+Indice : observez la différence entre auto-fit et auto-fill dans une grille CSS.
 ### Critère de réussite
 
 L'amélioration choisie fonctionne et ne perturbe pas les fonctionnalités déjà développées.
@@ -311,7 +328,7 @@ Documentation utile :
 - [React — useState](https://react.dev/reference/react/useState)
 - [React — useEffect](https://react.dev/reference/react/useEffect)
 - [MDN — Fetch API](https://developer.mozilla.org/fr/docs/Web/API/Fetch_API)
-- [REST Countries](https://restcountries.com/)
+- - [countries.dev — API des pays](https://countries.dev/countries)
 
 ## Travail attendu
 
@@ -320,3 +337,19 @@ Documentation utile :
 **Les cinq premiers exercices constituent le travail principal. Les défis 6 et 7 sont facultatifs.**
 
 Vous devez pouvoir expliquer les principales étapes de votre code : récupération des données, stockage dans le state, affichage des composants et filtrage.
+
+### En cas d'indisponibilité de l'API
+
+Si l'API `https://countries.dev/countries` est temporairement inaccessible, un fichier JSON local pourra être utilisé pour poursuivre le TP.
+
+Ce fichier, nommé `pays-secours.json`, sera placé dans le dossier `public` du projet.
+
+Pour l'utiliser, remplacez temporairement l'URL de l'API par :
+
+```js
+const API_URL = "/pays-secours.json";
+```
+
+La fonction `fetch()` reste identique : seule l'adresse de récupération des données change.
+
+**Important :** utilisez en priorité l'API publique. Le fichier local constitue uniquement une solution de secours.
